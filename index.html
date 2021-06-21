@@ -179,3 +179,61 @@
         </div>
     </body>
 </html>
+<html>
+	<head>
+		<title>比特幣匯率轉換</title>
+	</head>
+	<body style=" text-align: center; align-items: center; display: flex; flex-direction: column;">
+	<script>
+      function updateValues() {
+        var date = document.querySelector("#currencyDate").value;
+        var quantity = document.querySelector("#quantity").value;
+        var bitcoinPrice = document.querySelector("#dailyBitcoinPrice");
+        var bitcoinTotal = document.querySelector("#result");
+        if (date.length > 0) {
+          fetch(
+            `https://api.coindesk.com/v1/bpi/historical/close.json?start=${date}&end=${date}`
+          )
+            .then((result) => result.json())
+            .then((resultJson) => {
+              bitcoinPrice.innerHTML = `1 比特幣約 ${resultJson.bpi[date]} 美金`;
+              bitcoinTotal.innerHTML = `為 ${parseFloat(quantity) * parseFloat(resultJson.bpi[date])} 美金`;
+            })
+            .catch((err) => {
+              console.log(err);
+              alert("查無該日期匯率資料！");
+            });
+        } else {
+            alert("日期格式錯誤！");
+        }
+      }
+    </script>
+		<div>
+			<center>	
+				<p style="green">
+                    <i>
+                        <font size="8">
+                            比特幣轉換美金小工具
+                        </font>
+                    </i>
+                </p>
+			</center>
+		</div>
+		<div>
+			<span>匯率日期 </span>
+			<input type="date" id="currencyDate" />
+			<input type="number" id="quantity"  />
+			<span> 比特幣 </span>
+			<button onclick="updateValues()">轉換</button>
+			<span id="result">為 美金</span>
+		</div>
+		<div style="width: 50%; height: 200px; margin-top: 30px; border: 2px solid rgb(157, 200, 157);">
+			<div style=" width: 100%; height: 50%; background-color: rgb(194, 226, 194); display: grid; place-items: center;">
+				<h4>當前匯率</h4>
+			</div>
+			<div style="width: 100%; height: 50%; display: grid; place-items: center">
+				<p id="dailyBitcoinPrice">1 比特幣約 美金</p>
+			</div>
+		</div>
+	</body>
+</html>
